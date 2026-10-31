@@ -4,7 +4,7 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
-  var PALETTE = ['#ff8a2b', '#ff4f8b', '#c9a1ff', '#ffe9bd', '#ff6b6b', '#ffb15c'];
+  var PALETTE = ['#ff8a2b', '#ffb347', '#ffd27a', '#e0490f', '#ffe9bd', '#ff6b35'];
 
   /* ---------- aviso flotante ---------- */
   var toastTimer;
@@ -24,6 +24,47 @@
       bat.appendChild(batTpl.content.cloneNode(true));
     });
   }
+
+  /* ---------- hojas de otoño ---------- */
+  (function () {
+    var host = $('#leaves');
+    if (!host || reduce) return;
+    var colors = ['#ff8a2b', '#e0630f', '#c1440e', '#ffb347', '#ffd27a', '#b34a12', '#d97a1f'];
+    var shapes = ['leaf-maple', 'leaf-oak', 'leaf-maple'];
+    var count = window.innerWidth < 700 ? 12 : 22;
+    for (var i = 0; i < count; i++) {
+      var leaf = document.createElement('span');
+      leaf.className = 'leaf';
+      leaf.style.left = (Math.random() * 100) + 'vw';
+      leaf.style.setProperty('--size', (8 + Math.random() * 18) + 'px');
+      leaf.style.setProperty('--leaf', colors[Math.floor(Math.random() * colors.length)]);
+      leaf.style.setProperty('--dur', (9 + Math.random() * 12) + 's');
+      leaf.style.setProperty('--delay', (-Math.random() * 20) + 's');
+      leaf.style.setProperty('--drift', ((Math.random() * 2 - 1) * 160) + 'px');
+      leaf.style.setProperty('--spin', ((Math.random() * 2 - 1) * 720) + 'deg');
+      leaf.style.setProperty('--sway', (2.6 + Math.random() * 3) + 's');
+      leaf.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#' + shapes[Math.floor(Math.random() * shapes.length)] + '"/></svg>';
+      host.appendChild(leaf);
+    }
+  })();
+
+  /* ---------- luciérnagas ---------- */
+  (function () {
+    var host = $('#fireflies');
+    if (!host || reduce) return;
+    var count = window.innerWidth < 700 ? 8 : 14;
+    for (var i = 0; i < count; i++) {
+      var f = document.createElement('i');
+      f.className = 'firefly';
+      f.style.left = (Math.random() * 100) + '%';
+      f.style.top = (10 + Math.random() * 80) + '%';
+      f.style.setProperty('--dur', (8 + Math.random() * 10) + 's');
+      f.style.setProperty('--delay', (-Math.random() * 12) + 's');
+      f.style.setProperty('--fx', ((Math.random() * 2 - 1) * 90) + 'px');
+      f.style.setProperty('--fy', (-40 - Math.random() * 110) + 'px');
+      host.appendChild(f);
+    }
+  })();
 
   /* ---------- estrellas ---------- */
   (function () {
@@ -300,88 +341,326 @@
     }, { passive: true });
   }
 
-  /* ---------- musica ambiental ---------- */
+  /* ---------- galaxia de luciérnagas ---------- */
   (function () {
-    var btn = $('#audioBtn');
-    if (!btn) return;
-    var ctx = null, master = null, on = false, built = false;
+    var overlay = $('#galaxyOverlay');
+    var openBtn = $('#galaxyBtn');
+    var closeBtn = $('#galaxyClose');
+    var cv = $('#galaxyCanvas');
+    if (!overlay || !openBtn || !cv) return;
+    var ctx = cv.getContext('2d');
+    var W = 0, H = 0, DPR = 1, cx = 0, cy = 0, R = 120;
+    var running = false, raf = 0, startedAt = 0;
+    var pumpkin = [], stars = [], sparks = [], sprites = {};
+    var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+    var lastFocus = null;
+
+    function makeSprite(color) {
+      var c = document.createElement('canvas');
+      c.width = c.height = 64;
+      var g = c.getContext('2d');
+      var grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grd.addColorStop(0, 'rgba(255,255,255,.95)');
+      grd.addColorStop(.22, color);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = grd;
+      g.fillRect(0, 0, 64, 64);
+      return c;
+    }
+
+    function initSprites() {
+      var cols = { orange: '#ff9a3c', gold: '#ffd27a', cream: '#fff3d6', violet: '#b48cff', pink: '#ff7aa8', blue: '#8f9dff' };
+      for (var k in cols) if (!sprites[k]) sprites[k] = makeSprite(cols[k]);
+    }
+
+    function tri(px, py, ax, ay, bx, by, cx2, cy2) {
+      var d = (by - cy2) * (ax - cx2) + (cx2 - bx) * (ay - cy2);
+      if (!d) return false;
+      var l1 = ((by - cy2) * (px - cx2) + (cx2 - bx) * (py - cy2)) / d;
+      var l2 = ((cy2 - ay) * (px - cx2) + (ax - cx2) * (py - cy2)) / d;
+      return l1 >= 0 && l2 >= 0 && (1 - l1 - l2) >= 0;
+    }
+
+    function inEllipse(px, py, ex, ey, rx, ry) {
+      var dx = (px - ex) / rx, dy = (py - ey) / ry;
+      return dx * dx + dy * dy <= 1;
+    }
 
     function build() {
-      ctx = new (window.AudioContext || window.webkitAudioContext)();
-      master = ctx.createGain();
-      master.gain.value = 0;
-      master.connect(ctx.destination);
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+      cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      cx = W * .5; cy = H * .56;
+      R = Math.min(W * .23, H * .20, 165);
+      pumpkin = []; stars = []; sparks = [];
+      initSprites();
 
-      var lp = ctx.createBiquadFilter();
-      lp.type = 'lowpass';
-      lp.frequency.value = 720;
-      lp.Q.value = 0.6;
-      lp.connect(master);
+      var eyeY = cy - R * .16, eyeW = R * .13, eyeH = R * .20;
+      var exL = cx - R * .34, exR = cx + R * .34;
+      var target = W < 600 ? 420 : 780, attempts = 0;
 
-      [110, 164.81, 220, 329.63].forEach(function (f, i) {
-        var osc = ctx.createOscillator();
-        osc.type = i % 2 ? 'sine' : 'triangle';
-        osc.frequency.value = f;
-        osc.detune.value = (i - 1.5) * 5;
+      while (pumpkin.length < target && attempts < target * 40) {
+        attempts++;
+        var x = cx + (Math.random() * 2 - 1) * R * 1.08;
+        var y = cy + (Math.random() * 2 - 1) * R * .98;
+        var inside = inEllipse(x, y, cx, cy, R * .74, R * .68) ||
+          inEllipse(x, y, cx - R * .46, cy, R * .42, R * .65) ||
+          inEllipse(x, y, cx + R * .46, cy, R * .42, R * .65);
+        if (!inside) continue;
+        if (tri(x, y, exL - eyeW, eyeY, exL + eyeW, eyeY, exL, eyeY + eyeH)) continue;
+        if (tri(x, y, exR - eyeW, eyeY, exR + eyeW, eyeY, exR, eyeY + eyeH)) continue;
+        if (tri(x, y, cx - R * .07, cy + R * .10, cx + R * .07, cy + R * .10, cx, cy + R * .20)) continue;
+        var mdx = Math.abs(x - cx);
+        if (mdx < R * .38) {
+          var smile = cy + R * .24 + Math.pow(mdx / (R * .38), 2) * R * .06;
+          if (y > smile && y < cy + R * .36) continue;
+        }
+        var rr = Math.random();
+        pumpkin.push({
+          x: x, y: y, s: .55 + Math.random() * 1.2, a: .55 + Math.random() * .45,
+          ph: Math.random() * 6.283, tw: .6 + Math.random() * 1.7,
+          sprite: rr < .55 ? 'orange' : (rr < .82 ? 'gold' : 'cream')
+        });
+      }
 
-        var g = ctx.createGain();
-        g.gain.value = i === 3 ? 0.03 : 0.07;
-        osc.connect(g);
-        g.connect(lp);
-        osc.start();
+      for (var i = 0; i < 70; i++) {
+        var t = i / 70;
+        pumpkin.push({
+          x: cx - R * .02 + Math.sin(t * Math.PI) * R * .07 + (Math.random() * 2 - 1) * R * .035,
+          y: cy - R * .66 - t * R * .20 + (Math.random() * 2 - 1) * R * .03,
+          s: .5 + Math.random() * .85, a: .5 + Math.random() * .4,
+          ph: Math.random() * 6.283, tw: .8 + Math.random(),
+          sprite: Math.random() < .65 ? 'gold' : 'orange'
+        });
+      }
 
-        var lfo = ctx.createOscillator();
-        lfo.frequency.value = 0.05 + i * 0.013;
-        var lg = ctx.createGain();
-        lg.gain.value = i === 3 ? 0.012 : 0.03;
-        lfo.connect(lg);
-        lg.connect(g.gain);
-        lfo.start();
+      var n = W < 600 ? 500 : 950, maxR = Math.max(W, H) * .62;
+      for (var j = 0; j < n; j++) {
+        var rad = Math.pow(Math.random(), .72) * maxR + 16;
+        var arm = (j % 2) * Math.PI;
+        var ang = Math.random() * 6.283 + rad * .017 + arm;
+        var cc = Math.random();
+        stars.push({
+          r: rad, a: ang + (Math.random() * 2 - 1) * .32,
+          s: .35 + Math.random() * 1.1, al: .25 + Math.random() * .55,
+          ph: Math.random() * 6.283, tw: .4 + Math.random() * 1.4,
+          sprite: cc < .3 ? 'violet' : (cc < .55 ? 'pink' : (cc < .72 ? 'cream' : (cc < .88 ? 'orange' : 'blue')))
+        });
+      }
+
+      pointer.x = pointer.tx = W / 2;
+      pointer.y = pointer.ty = H / 2;
+    }
+
+    function nebula() {
+      var g = ctx.createRadialGradient(cx - R * 1.2, cy - R * .6, 0, cx - R * 1.2, cy - R * .6, R * 3.2);
+      g.addColorStop(0, 'rgba(126,66,196,.22)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+      var g2 = ctx.createRadialGradient(cx + R * 1.4, cy + R * .7, 0, cx + R * 1.4, cy + R * .7, R * 2.8);
+      g2.addColorStop(0, 'rgba(255,120,50,.12)');
+      g2.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function draw(t) {
+      if (!running) return;
+      var time = (t - startedAt) / 1000;
+      pointer.x += (pointer.tx - pointer.x) * .04;
+      pointer.y += (pointer.ty - pointer.y) * .04;
+      var px = pointer.x / W - .5, py = pointer.y / H - .5;
+      var ox = -px * R * .18, oy = -py * R * .14;
+
+      ctx.clearRect(0, 0, W, H);
+      nebula();
+      ctx.globalCompositeOperation = 'lighter';
+
+      var i, s, ang, x, y, tw, size, glow;
+      for (i = 0; i < stars.length; i++) {
+        s = stars[i];
+        ang = s.a + time * .035;
+        x = cx + Math.cos(ang) * s.r + ox * .6;
+        y = cy + Math.sin(ang) * s.r * .55 + oy * .6;
+        tw = .65 + .35 * Math.sin(time * s.tw + s.ph);
+        ctx.globalAlpha = s.al * tw;
+        size = s.s * 3.2;
+        ctx.drawImage(sprites[s.sprite], x - size, y - size, size * 2, size * 2);
+      }
+
+      for (i = 0; i < pumpkin.length; i++) {
+        s = pumpkin[i];
+        x = s.x + ox + Math.sin(time * .9 + s.ph) * 1.2;
+        y = s.y + oy + Math.cos(time * .8 + s.ph) * 1.6;
+        tw = .55 + .45 * Math.sin(time * 2.2 * s.tw + s.ph);
+        glow = s.s * 10 * (.85 + .25 * Math.sin(time * 3 + s.ph));
+        ctx.globalAlpha = s.a * tw;
+        ctx.drawImage(sprites[s.sprite], x - glow / 2, y - glow / 2, glow, glow);
+        ctx.fillStyle = 'rgba(255,242,205,.9)';
+        ctx.beginPath();
+        ctx.arc(x, y, s.s * .45, 0, 6.283);
+        ctx.fill();
+      }
+
+      for (i = sparks.length - 1; i >= 0; i--) {
+        var sp = sparks[i];
+        sp.x += sp.vx; sp.y += sp.vy; sp.vy += .015; sp.life -= .012;
+        if (sp.life <= 0) { sparks.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, sp.life);
+        size = sp.s * 9;
+        ctx.drawImage(sprites[sp.sprite], sp.x - size, sp.y - size, size * 2, size * 2);
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+      if (!reduce) raf = requestAnimationFrame(draw);
+    }
+
+    function start() {
+      stop();
+      running = true;
+      startedAt = performance.now();
+      raf = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    }
+
+    function openGalaxy() {
+      lastFocus = document.activeElement;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('galaxy-open');
+      build();
+      start();
+      if (closeBtn) setTimeout(function () { closeBtn.focus(); }, 100);
+    }
+
+    function closeGalaxy() {
+      stop();
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('galaxy-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    openBtn.addEventListener('click', openGalaxy);
+    if (closeBtn) closeBtn.addEventListener('click', closeGalaxy);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeGalaxy(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeGalaxy();
+    });
+
+    cv.addEventListener('pointermove', function (e) {
+      var rect = cv.getBoundingClientRect();
+      pointer.tx = e.clientX - rect.left;
+      pointer.ty = e.clientY - rect.top;
+    });
+
+    cv.addEventListener('pointerdown', function (e) {
+      var rect = cv.getBoundingClientRect();
+      var x = e.clientX - rect.left, y = e.clientY - rect.top;
+      for (var k = 0; k < 30; k++) {
+        var a = Math.random() * 6.283, speed = 1 + Math.random() * 4;
+        sparks.push({
+          x: x, y: y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed - 1,
+          s: .35 + Math.random() * .7, life: .6 + Math.random() * .45,
+          sprite: Math.random() < .55 ? 'orange' : 'gold'
+        });
+      }
+      if (reduce) start();
+    });
+
+    var rz;
+    window.addEventListener('resize', function () {
+      if (!overlay.classList.contains('open')) return;
+      clearTimeout(rz);
+      rz = setTimeout(function () { build(); start(); }, 200);
+    });
+  })();
+
+  /* ---------- música de la noche (YouTube) ---------- */
+  (function () {
+    var btn = $('#audioBtn');
+    var frame = $('#ytFrame');
+    if (!btn || !frame) return;
+
+    var audible = false;
+    var paused = false;
+    var unlocked = false;
+
+    function cmd(func, args) {
+      try {
+        frame.contentWindow.postMessage(JSON.stringify({
+          event: 'command',
+          func: func,
+          args: args || []
+        }), 'https://www.youtube.com');
+      } catch (err) {}
+    }
+
+    function applySound() {
+      if (!audible || paused) return;
+      cmd('unMute');
+      cmd('setVolume', [70]);
+      cmd('playVideo');
+    }
+
+    function paint() {
+      var playing = audible && !paused;
+      btn.classList.toggle('playing', playing);
+      btn.setAttribute('aria-pressed', String(playing));
+      btn.setAttribute('aria-label', playing ? 'Silenciar música de la noche' : 'Activar música de la noche');
+    }
+
+    function unlock(e) {
+      if (e && e.target && e.target.closest && e.target.closest('#audioBtn')) return;
+      if (unlocked || paused) return;
+      unlocked = true;
+      audible = true;
+      paint();
+      applySound();
+      [600, 1500, 3000].forEach(function (ms) {
+        setTimeout(function () {
+          if (audible && !paused) applySound();
+        }, ms);
       });
-
-      var len = Math.floor(ctx.sampleRate * 4);
-      var buffer = ctx.createBuffer(1, len, ctx.sampleRate);
-      var data = buffer.getChannelData(0);
-      for (var s = 0; s < len; s++) data[s] = (Math.random() * 2 - 1) * 0.55;
-      var noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      noise.loop = true;
-      var nf = ctx.createBiquadFilter();
-      nf.type = 'lowpass';
-      nf.frequency.value = 380;
-      var ng = ctx.createGain();
-      ng.gain.value = 0.045;
-      noise.connect(nf);
-      nf.connect(ng);
-      ng.connect(master);
-      noise.start();
-
-      built = true;
     }
 
     btn.addEventListener('click', function () {
-      try {
-        if (!built) build();
-        var now = ctx.currentTime;
-        if (on) {
-          master.gain.cancelScheduledValues(now);
-          master.gain.setTargetAtTime(0.0001, now, 0.3);
-          on = false;
-          setTimeout(function () {
-            if (!on && ctx && ctx.state === 'running') ctx.suspend();
-          }, 900);
-        } else {
-          ctx.resume();
-          master.gain.cancelScheduledValues(now);
-          master.gain.setTargetAtTime(0.16, now, 0.5);
-          on = true;
-        }
-        btn.classList.toggle('playing', on);
-        btn.setAttribute('aria-pressed', String(on));
-        btn.setAttribute('aria-label', on ? 'Silenciar música de la noche' : 'Activar música de la noche');
-      } catch (err) {
-        toast('Tu navegador no deja sonar la magia.');
+      if (!audible || paused) {
+        paused = false;
+        audible = true;
+        unlocked = true;
+        applySound();
+      } else {
+        paused = true;
+        cmd('pauseVideo');
+        cmd('mute');
       }
+      paint();
+    });
+
+    ['pointerdown', 'touchstart', 'keydown', 'wheel'].forEach(function (ev) {
+      window.addEventListener(ev, unlock, { passive: true });
+    });
+
+    frame.addEventListener('load', function () {
+      if (unlocked) applySound();
+    });
+
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (!audible) {
+          toast('Toca la pantalla para encender la música.');
+        }
+      }, 2600);
     });
   })();
 

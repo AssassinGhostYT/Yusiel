@@ -37,7 +37,7 @@ body.locked{overflow:hidden}
   z-index:0;
   overflow:hidden;
   pointer-events:none;
-  background:radial-gradient(120% 95% at 72% -10%, #33114a 0%, #1b0a2d 34%, #0a0415 68%, #06020d 100%);
+  background:radial-gradient(120% 95% at 72% -10%, #4a1f68 0%, #2a1244 34%, #140a26 68%, #0a0518 100%);
 }
 #stars{position:absolute;inset:0;width:100%;height:100%}
 .sky-grain{
@@ -114,10 +114,10 @@ body.locked{overflow:hidden}
   width:160%;
   height:46%;
   background:
-    radial-gradient(60% 70% at 30% 70%, rgba(201,161,255,.16), transparent 70%),
-    radial-gradient(55% 65% at 72% 60%, rgba(255,138,43,.10), transparent 70%),
-    radial-gradient(70% 70% at 50% 90%, rgba(120,60,160,.20), transparent 75%);
-  filter:blur(38px);
+    radial-gradient(60% 70% at 30% 70%, rgba(214,190,255,.30), transparent 72%),
+    radial-gradient(55% 65% at 72% 60%, rgba(255,176,96,.20), transparent 72%),
+    radial-gradient(70% 70% at 50% 90%, rgba(160,110,210,.30), transparent 78%);
+  filter:blur(42px);
   animation:fogDrift 38s ease-in-out infinite alternate;
 }
 @keyframes fogDrift{
@@ -164,16 +164,16 @@ body.locked{overflow:hidden}
 .floaty{
   position:absolute;
   width:18px;
-  color:var(--pink);
+  color:var(--orange);
   opacity:0;
   animation:heartFloat 26s linear infinite;
 }
 .floaty svg{width:100%;height:auto;display:block;fill:currentColor}
 .floaty:nth-of-type(1){left:6%;bottom:8%;animation-delay:-3s}
-.floaty:nth-of-type(2){left:26%;bottom:2%;animation-delay:-15s;width:12px;color:var(--orange)}
-.floaty:nth-of-type(3){left:58%;bottom:12%;animation-delay:-8s;width:14px}
-.floaty:nth-of-type(4){left:82%;bottom:4%;animation-delay:-20s;width:20px;color:var(--lilac)}
-.floaty:nth-of-type(5){left:44%;bottom:18%;animation-delay:-12s;width:10px;color:var(--orange)}
+.floaty:nth-of-type(2){left:26%;bottom:2%;animation-delay:-15s;width:12px;color:#ffb347}
+.floaty:nth-of-type(3){left:58%;bottom:12%;animation-delay:-8s;width:14px;color:#ff6b35}
+.floaty:nth-of-type(4){left:82%;bottom:4%;animation-delay:-20s;width:20px;color:#ffe9bd}
+.floaty:nth-of-type(5){left:44%;bottom:18%;animation-delay:-12s;width:10px;color:#ff8a2b}
 @keyframes heartFloat{
   0%{transform:translateY(0) scale(.8);opacity:0}
   15%{opacity:.35}
@@ -719,13 +719,13 @@ body.locked{overflow:hidden}
 .big-heart svg{
   width:100%;height:auto;
   fill:url(#heartGrad);
-  filter:drop-shadow(0 0 24px rgba(255,79,139,.55));
+  filter:drop-shadow(0 0 24px rgba(255,138,43,.6)) drop-shadow(0 0 60px rgba(255,90,20,.25));
 }
 .big-heart .ring{
   position:absolute;
   inset:-18%;
   border-radius:50%;
-  border:1px solid rgba(255,79,139,.30);
+  border:1px solid rgba(255,138,43,.38);
   animation:pulseRing 2.8s ease-out infinite;
 }
 .big-heart .ring:nth-child(2){animation-delay:1.4s}
@@ -845,7 +845,9 @@ body.locked{overflow:hidden}
 }
 .last-action{
   display:flex;
+  flex-wrap:wrap;
   justify-content:flex-end;
+  gap:12px;
   margin-top:28px;
   opacity:0;
   transform:translateY(14px);
@@ -862,7 +864,175 @@ body.locked{overflow:hidden}
   text-transform:uppercase;
   color:var(--muted);
 }
+/* ============ MIST + FIREFLIES ============ */
+.mist{
+  position:absolute;
+  pointer-events:none;
+  filter:blur(34px);
+  opacity:.6;
+  mix-blend-mode:screen;
+}
+.mist-a{
+  left:-25%;bottom:-6%;
+  width:150%;height:42%;
+  background:
+    radial-gradient(55% 65% at 35% 60%, rgba(214,190,255,.24), transparent 72%),
+    radial-gradient(50% 60% at 70% 70%, rgba(255,190,130,.15), transparent 70%);
+  animation:mistDrift 30s ease-in-out infinite alternate;
+}
+.mist-b{
+  right:-30%;top:18%;
+  width:90%;height:40%;
+  background:radial-gradient(50% 60% at 60% 50%, rgba(165,125,230,.20), transparent 72%);
+  animation:mistDrift 42s ease-in-out infinite alternate-reverse;
+}
+@keyframes mistDrift{
+  from{transform:translate3d(-3%,2%,0) scale(1)}
+  to{transform:translate3d(5%,-4%,0) scale(1.1)}
+}
+.fireflies{position:absolute;inset:0;overflow:hidden}
+.firefly{
+  position:absolute;
+  width:4px;height:4px;
+  margin:-2px;
+  border-radius:50%;
+  background:#ffd89a;
+  box-shadow:0 0 10px 3px rgba(255,180,80,.55);
+  opacity:0;
+  animation:fireflyFloat var(--dur,14s) ease-in-out var(--delay,0s) infinite alternate;
+}
+@keyframes fireflyFloat{
+  0%{transform:translate3d(0,0,0) scale(.6);opacity:0}
+  18%{opacity:.9}
+  55%{transform:translate3d(var(--fx,30px),var(--fy,-60px),0) scale(1.05);opacity:.55}
+  100%{transform:translate3d(calc(var(--fx,30px) * -1.2),calc(var(--fy,-60px) * 1.5),0) scale(.7);opacity:0}
+}
+
+/* ============ AUTUMN LEAVES ============ */
+.leaves{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.leaf{
+  position:absolute;
+  top:-12vh;
+  left:0;
+  width:var(--size,18px);
+  color:var(--leaf,#ff8a2b);
+  opacity:0;
+  will-change:transform;
+  animation:leafFall var(--dur,14s) linear var(--delay,0s) infinite;
+}
+.leaf svg{
+  display:block;
+  width:100%;height:auto;
+  fill:currentColor;
+  filter:drop-shadow(0 0 6px rgba(255,138,43,.25));
+  animation:leafSway var(--sway,4s) ease-in-out infinite alternate;
+}
+@keyframes leafFall{
+  0%{transform:translate3d(0,-12vh,0) rotate(0deg);opacity:0}
+  8%{opacity:.9}
+  80%{opacity:.85}
+  100%{transform:translate3d(var(--drift,80px),112vh,0) rotate(var(--spin,560deg));opacity:0}
+}
+@keyframes leafSway{
+  from{transform:rotate(-16deg) translateX(-7px)}
+  to{transform:rotate(16deg) translateX(7px)}
+}
+
+/* ============ GALAXY ============ */
+.galaxy-overlay{
+  position:fixed;
+  inset:0;
+  z-index:150;
+  overflow:hidden;
+  background:radial-gradient(120% 100% at 50% 45%, #241040 0%, #0e051d 58%, #04010a 100%);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .7s ease, visibility .7s;
+}
+.galaxy-overlay.open{opacity:1;visibility:visible}
+#galaxyCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;
+  cursor:crosshair;
+}
+.galaxy-ui{
+  position:absolute;
+  top:clamp(22px,5vh,54px);
+  left:50%;
+  transform:translate(-50%,-14px);
+  width:min(92vw,700px);
+  text-align:center;
+  pointer-events:none;
+  z-index:2;
+  opacity:0;
+  transition:opacity .8s .15s, transform .8s .15s;
+}
+.galaxy-overlay.open .galaxy-ui{opacity:1;transform:translate(-50%,0)}
+.galaxy-ui .kicker{color:var(--orange);text-shadow:0 0 20px rgba(255,138,43,.5)}
+.galaxy-ui h3{
+  margin:0 0 .22em;
+  font-family:var(--script);
+  font-weight:400;
+  font-size:clamp(2rem,5.5vw,3.6rem);
+  line-height:1.1;
+  color:var(--cream);
+  text-shadow:0 0 40px rgba(255,138,43,.45);
+}
+.galaxy-sub{
+  max-width:520px;
+  margin:0 auto;
+  font-size:clamp(.82rem,1.6vw,1rem);
+  font-weight:300;
+  line-height:1.7;
+  color:#dcccf3;
+}
+.galaxy-close{
+  position:absolute;
+  top:16px;right:16px;
+  z-index:3;
+  width:42px;height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(255,233,189,.25);
+  background:rgba(20,8,34,.6);
+  color:var(--cream);
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:transform .3s, background .3s;
+}
+.galaxy-close:hover{background:rgba(255,138,43,.18);transform:rotate(90deg)}
+.galaxy-close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.galaxy-hint{
+  position:absolute;
+  bottom:clamp(18px,4vh,36px);
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  margin:0;
+  font-family:var(--serif);
+  font-size:.6rem;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:rgba(255,233,189,.65);
+  animation:hintPulse 2.8s ease-in-out infinite;
+  white-space:nowrap;
+}
+@keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
+body.galaxy-open{overflow:hidden}
+
 /* ============ AUDIO TOGGLE ============ */
+.yt-audio{
+  position:fixed;
+  left:-10px;
+  bottom:0;
+  width:2px;height:2px;
+  border:0;
+  opacity:.01;
+  pointer-events:none;
+  z-index:-1;
+}
 .audio-btn{
   position:fixed;
   top:18px;right:18px;
@@ -912,7 +1082,7 @@ body.locked{overflow:hidden}
   pointer-events:none;
   z-index:105;
   fill:currentColor;
-  filter:drop-shadow(0 0 8px rgba(255,120,160,.45));
+  filter:drop-shadow(0 0 8px rgba(255,150,70,.5));
 }
 .confetti{
   position:fixed;
@@ -920,7 +1090,7 @@ body.locked{overflow:hidden}
   z-index:115;
   pointer-events:none;
   fill:currentColor;
-  filter:drop-shadow(0 0 6px rgba(255,140,90,.35));
+  filter:drop-shadow(0 0 6px rgba(255,150,70,.4));
 }
 .toast{
   position:fixed;
@@ -981,6 +1151,10 @@ body.locked{overflow:hidden}
   .last-sign{text-align:left;padding-right:0}
   .last-ps{text-align:left;padding-right:0}
   .last-action{justify-content:center}
+  .galaxy-ui{top:18px}
+  .galaxy-ui h3{font-size:clamp(1.7rem,8vw,2.4rem)}
+  .galaxy-sub{font-size:.8rem;max-width:300px}
+  .galaxy-hint{font-size:.5rem;letter-spacing:.2em}
   .wax-seal{width:48px;height:48px;font-size:1.45rem}
   .audio-btn{top:12px;right:12px}
   .footer{font-size:.55rem;letter-spacing:.18em}
@@ -1003,4 +1177,5 @@ body.locked{overflow:hidden}
   .name span{opacity:1;transform:none}
   .wax-seal{opacity:1}
   .floaty,.embers i,.bat{display:none}
+  .leaf,.fireflies{display:none}
 }

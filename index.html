@@ -22,9 +22,9 @@
       <stop offset="1" stop-color="#cf4c00"/>
     </radialGradient>
     <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffb15c"/>
-      <stop offset=".5" stop-color="#ff4f8b"/>
-      <stop offset="1" stop-color="#a44dff"/>
+      <stop offset="0" stop-color="#ffd27a"/>
+      <stop offset=".5" stop-color="#ff8a2b"/>
+      <stop offset="1" stop-color="#d9420b"/>
     </linearGradient>
     <radialGradient id="mg" cx="38%" cy="32%" r="72%">
       <stop offset="0" stop-color="#fffbe4"/>
@@ -107,6 +107,16 @@
     <circle cx="6" cy="17" r="3"/>
     <circle cx="17" cy="15" r="3"/>
   </symbol>
+
+  <symbol id="leaf-maple" viewBox="0 0 100 100">
+    <path d="M50 4 58 22 74 14 70 33 92 33 78 50 96 63 73 67 78 87 57 78 50 97 43 78 22 87 27 67 4 63 22 50 8 33 30 33 26 14 42 22Z"/>
+    <path d="M50 20 50 84 M50 42 30 30 M50 56 28 54 M50 42 70 30 M50 56 72 54" fill="none" stroke="rgba(40,8,0,.22)" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="leaf-oak" viewBox="0 0 100 100">
+    <path d="M50 4c10 12 25 10 26 24 12 4 12 20 0 24 10 10 0 26-14 22 0 16-22 16-24 4-14 8-26-8-16-20-14-8-10-26 4-28-4-14 10-18 24-26z"/>
+    <path d="M50 14 50 92" fill="none" stroke="rgba(40,8,0,.22)" stroke-width="2.6" stroke-linecap="round"/>
+  </symbol>
 </svg>
 <!-- SKY -->
 <div class="sky" id="sky" aria-hidden="true">
@@ -131,6 +141,9 @@
   <div class="bat bat-4" style="top:38%"></div>
 
   <div class="fog"></div>
+  <div class="mist mist-a"></div>
+  <div class="mist mist-b"></div>
+  <div class="fireflies" id="fireflies"></div>
 
   <div class="embers">
     <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -149,6 +162,8 @@
     </svg>
   </div>
 </div>
+
+<div class="leaves" id="leaves" aria-hidden="true"></div>
 
 <!-- TEMPLATE MURCIELAGO -->
 <template id="batTemplate">
@@ -379,7 +394,11 @@
       <p class="last-ps">P.D. El truco eras tú. El dulce también.</p>
 
       <div class="last-action">
-        <button class="btn btn-primary" id="saveNight" type="button">
+        <button class="btn btn-primary" id="galaxyBtn" type="button">
+          <span>Abrir mi galaxia</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+        </button>
+        <button class="btn btn-ghost" id="saveNight" type="button">
           <span id="saveLabel">Guardar esta noche</span>
           <svg aria-hidden="true"><use href="#heart-line"/></svg>
         </button>
@@ -392,10 +411,27 @@
 
 <footer class="footer">Hecho con magia, insomnio y demasiadas ganas de verte - 31 de octubre</footer>
 
+<!-- MUSICA -->
+<iframe id="ytFrame" class="yt-audio" title="Música romántica de Halloween" src="https://www.youtube.com/embed/GsziQUX7lnk?autoplay=1&mute=1&loop=1&playlist=GsziQUX7lnk&controls=0&playsinline=1&enablejsapi=1&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1" aria-hidden="true"></iframe>
+
 <!-- AUDIO -->
 <button class="audio-btn" id="audioBtn" type="button" aria-pressed="false" aria-label="Activar música de la noche">
   <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#note"/></svg>
 </button>
+
+<!-- GALAXIA -->
+<div class="galaxy-overlay" id="galaxyOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="galaxyTitle">
+  <canvas id="galaxyCanvas"></canvas>
+  <div class="galaxy-ui">
+    <p class="kicker">un pequeño universo</p>
+    <h3 id="galaxyTitle">La galaxia de Celisbeth</h3>
+    <p class="galaxy-sub">Cada punto de luz es una razón. La calabaza del centro eres tú: mi lugar favorito en toda la noche.</p>
+  </div>
+  <button class="galaxy-close" id="galaxyClose" type="button" aria-label="Cerrar la galaxia">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#close"/></svg>
+  </button>
+  <p class="galaxy-hint">Toca el centro y pide un deseo</p>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="script.js" defer></script>

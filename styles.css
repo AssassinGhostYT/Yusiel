@@ -1051,6 +1051,11 @@ body.locked{overflow:hidden}
 }
 @keyframes hintPulse{0%,100%{opacity:.45}50%{opacity:1}}
 body.galaxy-open{overflow:hidden}
+body.galaxy-open .sky,
+body.galaxy-open .leaves,
+body.galaxy-open .wrap,
+body.galaxy-open .footer,
+body.galaxy-open .toast{display:none !important}
 
 /* ============ AUDIO TOGGLE ============ */
 .yt-audio{

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Celisbeth - Noche de Brujas</title>
+<meta name="description" content="Un conjuro de octubre para Celisbeth: una carta, doce razones y un último hechizo.">
+<meta name="theme-color" content="#06020d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Great+Vibes&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SVG SPRITE -->
+<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="pg" cx="38%" cy="32%" r="78%">
+      <stop offset="0" stop-color="#ffbe6a"/>
+      <stop offset=".5" stop-color="#ff8524"/>
+      <stop offset="1" stop-color="#cf4c00"/>
+    </radialGradient>
+    <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb15c"/>
+      <stop offset=".5" stop-color="#ff4f8b"/>
+      <stop offset="1" stop-color="#a44dff"/>
+    </linearGradient>
+    <radialGradient id="mg" cx="38%" cy="32%" r="72%">
+      <stop offset="0" stop-color="#fffbe4"/>
+      <stop offset=".62" stop-color="#ffe9a8"/>
+      <stop offset="1" stop-color="#e3bb6a"/>
+    </radialGradient>
+  </defs>
+
+  <symbol id="pumpkin" viewBox="0 0 220 200">
+    <path d="M108 48c-7-17-2-31 12-38 8 11 3 26-5 37" fill="#5f7d2d" stroke="#3c541a" stroke-width="3"/>
+    <ellipse cx="66" cy="126" rx="34" ry="56" fill="#e8650e"/>
+    <ellipse cx="154" cy="126" rx="34" ry="56" fill="#d95a07"/>
+    <ellipse cx="110" cy="126" rx="68" ry="60" fill="url(#pg)"/>
+    <ellipse cx="90" cy="118" rx="26" ry="48" fill="#ff9b3f" opacity=".35"/>
+    <g fill="#2a0620">
+      <path d="M76 108 l18 0 -9 17 z"/>
+      <path d="M126 108 l18 0 -9 17 z"/>
+      <path d="M103 130 l14 12 -28 0 z"/>
+      <path d="M70 150 q10 14 20 0 q10 14 20 0 q10 14 20 0 q10 14 20 0" fill="none" stroke="#2a0620" stroke-width="7" stroke-linecap="round"/>
+    </g>
+  </symbol>
+
+  <symbol id="heart" viewBox="0 0 100 95">
+    <path d="M50 90 C18 66 2 47 2 28 C2 13 13 3 27 3 C37 3 46 10 50 19 C54 10 63 3 73 3 C87 3 98 13 98 28 C98 47 82 66 50 90 Z"/>
+  </symbol>
+
+  <symbol id="moon-line" viewBox="0 0 100 100">
+    <path d="M66 8 a42 42 0 1 0 0 84 a34 34 0 1 1 0 -84 z"/>
+    <circle cx="40" cy="36" r="5" opacity=".55"/>
+    <circle cx="30" cy="58" r="3.4" opacity=".45"/>
+    <circle cx="46" cy="72" r="4" opacity=".4"/>
+  </symbol>
+
+  <symbol id="pumpkin-line" viewBox="0 0 100 100">
+    <path d="M50 30c-4-9-1-16 5-20"/>
+    <ellipse cx="50" cy="60" rx="31" ry="26"/>
+    <path d="M50 34c-14 0-22 11-22 26s8 26 22 26"/>
+    <path d="M50 34c14 0 22 11 22 26s-8 26-22 26"/>
+    <path d="M39 55l8 0 -4 8z" fill="currentColor" stroke="none"/>
+    <path d="M53 55l8 0 -4 8z" fill="currentColor" stroke="none"/>
+    <path d="M40 70q5 6 10 0t10 0" />
+  </symbol>
+
+  <symbol id="bat-line" viewBox="0 0 100 100">
+    <path d="M50 38c-6-9-6-16-1-22 3 5 4 10 3 15 6-4 12-4 18 0 -1-5 0-10 3-15 5 6 5 13-1 22"/>
+    <path d="M50 36C38 26 24 22 8 26c7 6 6 12 1 17 8 0 14 3 18 8 2-6 6-9 12-11"/>
+    <path d="M50 36c12-10 26-14 42-10 -7 6-6 12-1 17 -8 0-14 3-18 8 -2-6-6-9-12-11"/>
+    <ellipse cx="50" cy="47" rx="9" ry="12"/>
+    <path d="M42 62l-5 10M50 64v10M58 62l5 10"/>
+  </symbol>
+
+  <symbol id="candle-line" viewBox="0 0 100 100">
+    <path d="M50 10c6 8 9 14 9 19a9 9 0 0 1-18 0c0-5 3-11 9-19z"/>
+    <path d="M50 38v8"/>
+    <rect x="38" y="46" width="24" height="38" rx="4"/>
+    <path d="M38 52c-5 2-6 8-2 11M62 58c5 1 7 6 3 9"/>
+    <path d="M30 88h40"/>
+    <path d="M45 46c0 4 1 6 5 6"/>
+  </symbol>
+
+  <symbol id="heart-line" viewBox="0 0 100 100">
+    <path d="M50 86C22 66 8 49 8 32 8 19 18 9 30 9c8 0 15 5 20 14 5-9 12-14 20-14 12 0 22 10 22 23 0 17-14 34-42 54z"/>
+    <path d="M26 32c0-6 4-10 10-10" opacity=".6"/>
+  </symbol>
+
+  <symbol id="star" viewBox="0 0 24 24">
+    <path d="M12 2l2.7 6.7L21 11l-6.3 2.3L12 20l-2.7-6.7L3 11l6.3-2.3z"/>
+  </symbol>
+
+  <symbol id="close" viewBox="0 0 24 24">
+    <path d="M6 6l12 12M18 6L6 18"/>
+  </symbol>
+
+  <symbol id="arrow" viewBox="0 0 24 24">
+    <path d="M5 12h14M13 6l6 6-6 6"/>
+  </symbol>
+
+  <symbol id="note" viewBox="0 0 24 24">
+    <path d="M9 17V5l11-2v12"/>
+    <circle cx="6" cy="17" r="3"/>
+    <circle cx="17" cy="15" r="3"/>
+  </symbol>
+</svg>
+<!-- SKY -->
+<div class="sky" id="sky" aria-hidden="true">
+  <canvas id="stars"></canvas>
+  <div class="sky-grain"></div>
+
+  <div class="moon">
+    <svg viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="88" fill="url(#mg)"/>
+      <circle cx="72" cy="80" r="15" fill="#e2bf78" opacity=".5"/>
+      <circle cx="122" cy="58" r="9" fill="#e2bf78" opacity=".4"/>
+      <circle cx="118" cy="128" r="19" fill="#e2bf78" opacity=".42"/>
+      <circle cx="58" cy="132" r="7" fill="#e2bf78" opacity=".35"/>
+      <circle cx="92" cy="42" r="5" fill="#e2bf78" opacity=".3"/>
+      <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,251,228,.55)" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div class="bat" style="top:12%"></div>
+  <div class="bat bat-2" style="top:26%"></div>
+  <div class="bat bat-3" style="top:6%"></div>
+  <div class="bat bat-4" style="top:38%"></div>
+
+  <div class="fog"></div>
+
+  <div class="embers">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+
+  <svg class="floaty" viewBox="0 0 100 95"><use href="#heart"/></svg>
+  <svg class="floaty" viewBox="0 0 100 95"><use href="#heart"/></svg>
+  <svg class="floaty" viewBox="0 0 100 95"><use href="#heart"/></svg>
+  <svg class="floaty" viewBox="0 0 100 95"><use href="#heart"/></svg>
+  <svg class="floaty" viewBox="0 0 100 95"><use href="#heart"/></svg>
+
+  <div class="hills">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path d="M0,238 C160,180 300,252 470,214 C650,174 760,232 950,206 C1120,182 1290,244 1440,214 L1440,320 L0,320 Z" fill="#0b0418" opacity=".9"/>
+      <path d="M0,270 C190,232 340,286 520,258 C700,230 840,280 1020,262 C1200,244 1330,286 1440,266 L1440,320 L0,320 Z" fill="#05020c"/>
+    </svg>
+  </div>
+</div>
+
+<!-- TEMPLATE MURCIELAGO -->
+<template id="batTemplate">
+  <svg viewBox="0 0 120 60" aria-hidden="true">
+    <g class="wing wing-l">
+      <path d="M56 30 C42 14 24 8 6 14 C18 20 14 26 4 30 C18 32 20 40 12 46 C34 48 48 42 56 34 Z" fill="#120a1f" stroke="rgba(255,79,139,.22)" stroke-width="1"/>
+    </g>
+    <g class="wing wing-r">
+      <path d="M64 30 C78 14 96 8 114 14 C102 20 106 26 116 30 C102 32 100 40 108 46 C86 48 72 42 64 34 Z" fill="#120a1f" stroke="rgba(255,79,139,.22)" stroke-width="1"/>
+    </g>
+    <ellipse cx="60" cy="32" rx="6.5" ry="10" fill="#0c0616"/>
+    <path d="M54 24 l-2 -8 6 4 z M66 24 l2 -8 -6 4 z" fill="#0c0616"/>
+    <circle cx="57.5" cy="29" r="1.1" fill="#ff8a2b"/>
+    <circle cx="62.5" cy="29" r="1.1" fill="#ff8a2b"/>
+  </svg>
+</template>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero" id="inicio">
+    <p class="eyebrow reveal"><span class="rule"></span>31 de octubre - un conjuro para ti<span class="rule"></span></p>
+
+    <h1 class="name" aria-label="Celisbeth">
+      <span style="--i:0" aria-hidden="true">C</span><span style="--i:1" aria-hidden="true">e</span><span style="--i:2" aria-hidden="true">l</span><span style="--i:3" aria-hidden="true">i</span><span style="--i:4" aria-hidden="true">s</span><span style="--i:5" aria-hidden="true">b</span><span style="--i:6" aria-hidden="true">e</span><span style="--i:7" aria-hidden="true">t</span><span style="--i:8" aria-hidden="true">h</span>
+    </h1>
+    <div class="name-glow" aria-hidden="true"></div>
+
+    <p class="tagline"><span id="typed"></span><span class="caret" aria-hidden="true"></span></p>
+    <p class="hero-line">Entre calabazas, sombras y estrellas, apareciste tú.</p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#carta">
+        Abrir mi carta
+        <svg aria-hidden="true"><use href="#arrow"/></svg>
+      </a>
+      <button class="btn btn-ghost" id="wishBtn" type="button">Pedir un deseo</button>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true"><span>desliza</span><i></i></div>
+
+    <div class="pumpkin-row" aria-hidden="true">
+      <svg viewBox="0 0 220 200"><use href="#pumpkin"/></svg>
+      <svg viewBox="0 0 220 200"><use href="#pumpkin"/></svg>
+      <svg viewBox="0 0 220 200"><use href="#pumpkin"/></svg>
+      <svg viewBox="0 0 220 200"><use href="#pumpkin"/></svg>
+    </div>
+  </header>
+
+  <!-- CARTA -->
+  <section class="section" id="carta">
+    <div class="section-head reveal">
+      <p class="kicker">capítulo uno</p>
+      <h2 class="sec-title">Lo que no me atrevo a decir en voz alta</h2>
+    </div>
+
+    <article class="letter reveal" id="letter">
+      <div class="spider" aria-hidden="true">
+        <svg viewBox="0 0 44 130">
+          <line x1="22" y1="0" x2="22" y2="78" stroke="rgba(255,233,189,.35)" stroke-width="1"/>
+          <ellipse cx="22" cy="88" rx="8" ry="10" fill="#150a22" stroke="rgba(255,79,139,.35)" stroke-width="1"/>
+          <circle cx="22" cy="78" r="4.4" fill="#150a22" stroke="rgba(255,79,139,.35)" stroke-width="1"/>
+          <g fill="none" stroke="#150a22" stroke-width="2" stroke-linecap="round">
+            <path d="M15 84 C8 80 5 72 3 64"/>
+            <path d="M14 90 C7 90 3 86 1 80"/>
+            <path d="M15 94 C9 98 6 104 5 112"/>
+            <path d="M29 84 C36 80 39 72 41 64"/>
+            <path d="M30 90 C37 90 41 86 43 80"/>
+            <path d="M29 94 C35 98 38 104 39 112"/>
+          </g>
+        </svg>
+      </div>
+
+      <p class="letter-to">Para Celisbeth, dueña de mi octubre:</p>
+
+      <p class="line" style="--i:0">Si esta noche los monstruos salen a caminar, que sepan que hay algo más valiente que el miedo: lo que siento por ti. No necesito disfraz, contigo ya soy mi mejor versión.</p>
+
+      <p class="line" style="--i:1">Me gusta tu risa cuando te ríes de mis chistes malos, tu forma de decir mi nombre y esa manera tuya de hacer que la noche más oscura parezca un cuento con final feliz.</p>
+
+      <p class="line" style="--i:2">No te pido caramelos ni trucos. Te pido un pedacito de tus noches, de tus silencios y de tus planes. Te pido que me dejes quererte despacio, como se encienden las velas: sin prisa, pero sin apagarnos.</p>
+
+      <p class="line" style="--i:3">Porque si la vida es un bosque oscuro, yo quiero perderme contigo.</p>
+
+      <p class="line sign" style="--i:4">Siempre tuyo, incluso en la oscuridad.</p>
+      <p class="line ps" style="--i:5">P.D. No es un hechizo. Es que me gustas de verdad.</p>
+
+      <div class="wax-seal" aria-hidden="true">C</div>
+    </article>
+  </section>
+
+  <!-- RAZONES -->
+  <section class="section" id="razones">
+    <div class="section-head reveal">
+      <p class="kicker">capítulo dos</p>
+      <h2 class="sec-title">Doce razones y todavía me faltan</h2>
+      <p class="sec-sub">Una por cada campanada de la medianoche. Y aún así me quedo corto.</p>
+    </div>
+
+    <ol class="reasons">
+      <li class="reason reveal"><span class="r-num">01</span><p>Por tu risa, que suena a caramelos cayendo sobre una mesa de madera.</p></li>
+      <li class="reason reveal"><span class="r-num">02</span><p>Porque haces magia sin varita, sin conjuro y sin darte cuenta.</p></li>
+      <li class="reason reveal"><span class="r-num">03</span><p>Por tu forma de mirarme, como si yo fuera la luna llena de octubre.</p></li>
+      <li class="reason reveal"><span class="r-num">04</span><p>Porque contigo hasta el frío de la noche se vuelve un buen lugar para quedarse.</p></li>
+      <li class="reason reveal"><span class="r-num">05</span><p>Por tu voz, que es mi canción de fondo incluso cuando hay silencio.</p></li>
+      <li class="reason reveal"><span class="r-num">06</span><p>Porque eres mi lugar seguro en la noche más rara del año.</p></li>
+      <li class="reason reveal"><span class="r-num">07</span><p>Por tus abrazos, que espantan cualquier monstruo sin necesidad de sal.</p></li>
+      <li class="reason reveal"><span class="r-num">08</span><p>Porque me eliges aunque no lleve disfraz ni máscara que me haga mejor.</p></li>
+      <li class="reason reveal"><span class="r-num">09</span><p>Por tu paciencia conmigo, que es una forma muy callada de querer.</p></li>
+      <li class="reason reveal"><span class="r-num">10</span><p>Porque tu nombre ya es mi conjuro favorito: lo digo bajito y se me pasa el miedo.</p></li>
+      <li class="reason reveal"><span class="r-num">11</span><p>Porque contigo lo cotidiano sabe a magia y los martes parecen viernes.</p></li>
+      <li class="reason reveal"><span class="r-num">12</span><p>Porque me gustas hoy, mañana y en todas las lunas que me queden por ver.</p></li>
+    </ol>
+  </section>
+  <!-- CARTAS -->
+  <section class="section" id="cartas">
+    <div class="section-head reveal">
+      <p class="kicker">capítulo tres</p>
+      <h2 class="sec-title">Elige una carta</h2>
+      <p class="sec-sub">Cada una guarda un pedacito de lo que siento. Tócalas, no muerden.</p>
+    </div>
+
+    <div class="deck">
+      <button class="card reveal" type="button" aria-pressed="false" aria-label="Abrir carta de la calabaza">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#pumpkin-line"/></svg>
+            <span class="card-label">La calabaza</span>
+            <span class="card-hint">toca para abrir</span>
+          </span>
+          <span class="card-face card-back">
+            <span class="card-back-label">La calabaza</span>
+            <span class="card-text">Dentro de mí hay una lucecita que solo se enciende cuando llegas tú. Lo demás son sombras.</span>
+            <svg class="card-icon-mini" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button class="card reveal" type="button" aria-pressed="false" aria-label="Abrir carta del murciélago">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#bat-line"/></svg>
+            <span class="card-label">El murciélago</span>
+            <span class="card-hint">toca para abrir</span>
+          </span>
+          <span class="card-face card-back">
+            <span class="card-back-label">El murciélago</span>
+            <span class="card-text">Si alguna vez me pierdo en la noche, búscame donde suenan tus risas. Ahí voy a estar.</span>
+            <svg class="card-icon-mini" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button class="card reveal" type="button" aria-pressed="false" aria-label="Abrir carta de la luna">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#moon-line"/></svg>
+            <span class="card-label">La luna</span>
+            <span class="card-hint">toca para abrir</span>
+          </span>
+          <span class="card-face card-back">
+            <span class="card-back-label">La luna</span>
+            <span class="card-text">No necesito mirar el cielo para saber que existe la magia: me basta con mirarte un segundo a los ojos.</span>
+            <svg class="card-icon-mini" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button class="card reveal" type="button" aria-pressed="false" aria-label="Abrir carta de la vela">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#candle-line"/></svg>
+            <span class="card-label">La vela</span>
+            <span class="card-hint">toca para abrir</span>
+          </span>
+          <span class="card-face card-back">
+            <span class="card-back-label">La vela</span>
+            <span class="card-text">Pide un deseo. El mío ya se cumplió la primera vez que dijiste mi nombre.</span>
+            <svg class="card-icon-mini" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+          </span>
+        </span>
+      </button>
+
+      <button class="card reveal" type="button" aria-pressed="false" aria-label="Abrir carta del corazón">
+        <span class="card-inner">
+          <span class="card-face card-front">
+            <svg class="card-icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#heart-line"/></svg>
+            <span class="card-label">El corazón</span>
+            <span class="card-hint">toca para abrir</span>
+          </span>
+          <span class="card-face card-back">
+            <span class="card-back-label">El corazón</span>
+            <span class="card-text">Este corazón es un poco torpe, pero tiene una sola dirección: la tuya.</span>
+            <svg class="card-icon-mini" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><use href="#star"/></svg>
+          </span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="section final" id="final">
+    <div class="big-heart reveal" aria-hidden="true">
+      <span class="ring"></span>
+      <span class="ring"></span>
+      <svg viewBox="0 0 100 95"><use href="#heart"/></svg>
+    </div>
+
+    <div class="section-head reveal" style="margin-bottom:0">
+      <p class="kicker">capítulo cuatro</p>
+      <h2 class="sec-title">Ya no queda nada que esconder</h2>
+    </div>
+
+    <p class="final-text reveal">Celisbeth, me gustas como la luna llena: aunque todo esté oscuro, siempre encuentro la forma de mirarte. No quiero asustarte con palabras grandes, solo invitarte a quedarte.</p>
+
+    <button class="btn btn-primary reveal" id="spellBtn" type="button">
+      Tengo un último conjuro
+      <svg aria-hidden="true"><use href="#arrow"/></svg>
+    </button>
+
+    <p class="final-small reveal">Sin trucos. Sin disfraces. Solo yo, queriéndote.</p>
+  </section>
+</div>
+
+<footer class="footer">Hecho con magia, insomnio y demasiadas ganas de verte - 31 de octubre</footer>
+
+<!-- AUDIO -->
+<button class="audio-btn" id="audioBtn" type="button" aria-pressed="false" aria-label="Activar música de la noche">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#note"/></svg>
+</button>
+
+<!-- MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Cerrar el conjuro">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#close"/></svg>
+    </button>
+    <p class="kicker">el último conjuro</p>
+    <h3 id="modalTitle">Celisbeth...</h3>
+    <p>No quiero asustarte, pero me estoy enamorando de ti. Y no pienso pedirle a ninguna bruja que me cure.</p>
+    <p>Si esta noche me dices que sí, prometo hacer de cada octubre nuestro pequeño ritual: dulces, películas de miedo que no veremos porque estaremos hablando, y una calabaza que se ría con nosotros.</p>
+    <p>El truco es que me tienes. El dulce eres tú.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" type="button" data-answer="magia">Sí, con toda la magia</button>
+      <button class="btn btn-ghost" type="button" data-answer="dulces">Sí, empieza por los dulces</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="script.js" defer></script>
+</body>
+</html>

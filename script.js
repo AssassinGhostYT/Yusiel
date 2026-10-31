@@ -351,7 +351,7 @@
     var ctx = cv.getContext('2d');
     var W = 0, H = 0, DPR = 1, cx = 0, cy = 0, R = 120;
     var running = false, raf = 0, startedAt = 0;
-    var pumpkin = [], stars = [], sparks = [], sprites = {};
+    var pumpkin = [], stars = [], sparks = [], sprites = {}, wordEls = [];
     var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
     var lastFocus = null;
 
@@ -392,48 +392,168 @@
       cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
       cv.style.width = W + 'px'; cv.style.height = H + 'px';
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      cx = W * .5; cy = H * .56;
-      R = Math.min(W * .23, H * .20, 165);
+      cx = W * .5; cy = H * .57;
+      R = Math.min(W * .26, H * .21, 190);
       pumpkin = []; stars = []; sparks = [];
       initSprites();
 
-      var eyeY = cy - R * .16, eyeW = R * .13, eyeH = R * .20;
-      var exL = cx - R * .34, exR = cx + R * .34;
-      var target = W < 600 ? 420 : 780, attempts = 0;
+      /* tres lobulos: centro, izquierda, derecha */
+      var C = { x: cx, y: cy, rx: R * .60, ry: R * .80 };
+      var Lb = { x: cx - R * .42, y: cy, rx: R * .54, ry: R * .76 };
+      var Rb = { x: cx + R * .42, y: cy, rx: R * .54, ry: R * .76 };
 
+      var Rx = R * .98, Ry = R * .82;
+      function topY(px) {
+        var u = Math.max(-1, Math.min(1, (px - cx) / Rx));
+        var base = -Ry * Math.sqrt(Math.max(0, 1 - u * u));
+        var ad = Math.abs(px - cx);
+        var dip = Ry * .065 * Math.exp(-Math.pow((ad - .34 * Rx) / (.115 * Rx), 2));
+        var bump = -Ry * .022 * Math.exp(-Math.pow((ad - .68 * Rx) / (.16 * Rx), 2));
+        return base + dip + bump;
+      }
+
+      var eyeY = cy - R * .14, eyeW = R * .16, eyeH = R * .22, eyeTop = eyeY - R * .04;
+      var exL = cx - R * .31, exR = cx + R * .31;
+      var target = W < 600 ? 500 : 820, attempts = 0;
+
+      function addDot(px, py, sprite, size, alpha) {
+        pumpkin.push({
+          x: px, y: py, s: size, a: alpha,
+          ph: Math.random() * 6.283, tw: .5 + Math.random() * 1.2,
+          sprite: sprite
+        });
+      }
+      function lineDots(x1, y1, x2, y2, count, sprite, size, alpha) {
+        for (var q = 0; q < count; q++) {
+          var tt = q / Math.max(1, count - 1);
+          addDot(x1 + (x2 - x1) * tt, y1 + (y2 - y1) * tt, sprite, size, alpha);
+        }
+      }
+      function curveDots(x1, y1, cxp, cyp, x2, y2, count, sprite, size, alpha) {
+        for (var q = 0; q < count; q++) {
+          var tt = q / Math.max(1, count - 1), mt = 1 - tt;
+          addDot(
+            mt * mt * x1 + 2 * mt * tt * cxp + tt * tt * x2,
+            mt * mt * y1 + 2 * mt * tt * cyp + tt * tt * y2,
+            sprite, size, alpha
+          );
+        }
+      }
+      function mouthTop(px) {
+        var k = Math.min(1, Math.abs(px - cx) / (R * .37));
+        return cy + R * .27 - k * k * R * .11;
+      }
+      function mouthBottom(px) {
+        var k = Math.min(1, Math.abs(px - cx) / (R * .37));
+        return mouthTop(px) + R * .16 * (1 - k * k * .62);
+      }
+
+      /* relleno de luciernagas dentro de la calabaza */
       while (pumpkin.length < target && attempts < target * 40) {
         attempts++;
-        var x = cx + (Math.random() * 2 - 1) * R * 1.08;
-        var y = cy + (Math.random() * 2 - 1) * R * .98;
-        var inside = inEllipse(x, y, cx, cy, R * .74, R * .68) ||
-          inEllipse(x, y, cx - R * .46, cy, R * .42, R * .65) ||
-          inEllipse(x, y, cx + R * .46, cy, R * .42, R * .65);
+        var x = cx + (Math.random() * 2 - 1) * R;
+        var y = cy + (Math.random() * 2 - 1) * R * .86;
+        var inside = inEllipse(x, y, C.x, C.y, C.rx, C.ry) ||
+          inEllipse(x, y, Lb.x, Lb.y, Lb.rx, Lb.ry) ||
+          inEllipse(x, y, Rb.x, Rb.y, Rb.rx, Rb.ry);
         if (!inside) continue;
-        if (tri(x, y, exL - eyeW, eyeY, exL + eyeW, eyeY, exL, eyeY + eyeH)) continue;
-        if (tri(x, y, exR - eyeW, eyeY, exR + eyeW, eyeY, exR, eyeY + eyeH)) continue;
-        if (tri(x, y, cx - R * .07, cy + R * .10, cx + R * .07, cy + R * .10, cx, cy + R * .20)) continue;
-        var mdx = Math.abs(x - cx);
-        if (mdx < R * .38) {
-          var smile = cy + R * .24 + Math.pow(mdx / (R * .38), 2) * R * .06;
-          if (y > smile && y < cy + R * .36) continue;
+        if (tri(x, y, exL - eyeW, eyeTop, exL + eyeW, eyeTop, exL, eyeY + eyeH)) continue;
+        if (tri(x, y, exR - eyeW, eyeTop, exR + eyeW, eyeTop, exR, eyeY + eyeH)) continue;
+        if (tri(x, y, cx - R * .065, cy + R * .05, cx + R * .065, cy + R * .05, cx, cy + R * .19)) continue;
+        if (Math.abs(x - cx) < R * .37) {
+          if (y > mouthTop(x) && y < mouthBottom(x)) continue;
         }
         var rr = Math.random();
         pumpkin.push({
-          x: x, y: y, s: .55 + Math.random() * 1.2, a: .55 + Math.random() * .45,
+          x: x, y: y, s: .55 + Math.random() * 1.15, a: .5 + Math.random() * .45,
           ph: Math.random() * 6.283, tw: .6 + Math.random() * 1.7,
-          sprite: rr < .55 ? 'orange' : (rr < .82 ? 'gold' : 'cream')
+          sprite: rr < .5 ? 'orange' : (rr < .8 ? 'gold' : 'cream')
         });
       }
 
-      for (var i = 0; i < 70; i++) {
-        var t = i / 70;
-        pumpkin.push({
-          x: cx - R * .02 + Math.sin(t * Math.PI) * R * .07 + (Math.random() * 2 - 1) * R * .035,
-          y: cy - R * .66 - t * R * .20 + (Math.random() * 2 - 1) * R * .03,
-          s: .5 + Math.random() * .85, a: .5 + Math.random() * .4,
-          ph: Math.random() * 6.283, tw: .8 + Math.random(),
-          sprite: Math.random() < .65 ? 'gold' : 'orange'
-        });
+      /* contorno brillante, para que se lea como calabaza */
+      var edge = Math.max(60, Math.round(R * .78));
+      for (var e = 0; e < edge; e++) {
+        var exx = cx - Rx + (2 * Rx) * (e / Math.max(1, edge - 1));
+        addDot(exx, cy + topY(exx), 'cream', 1.6, 1);
+        addDot(exx, cy - topY(exx), 'cream', 1.6, 1);
+      }
+
+      /* costillas */
+      var rib = Math.max(26, Math.round(R * .32));
+      var sx = .34 * Rx;
+      curveDots(cx - sx, cy + topY(cx - sx), cx - .50 * Rx, cy, cx - sx, cy - topY(cx - sx), rib, 'orange', 1.3, .8);
+      curveDots(cx + sx, cy + topY(cx + sx), cx + .50 * Rx, cy, cx + sx, cy - topY(cx + sx), rib, 'orange', 1.3, .8);
+
+      /* ojos */
+      var eyeN = Math.max(14, Math.round(R * .10));
+      lineDots(exL - eyeW, eyeTop, exL + eyeW, eyeTop, eyeN, 'gold', 1.7, 1);
+      lineDots(exL - eyeW, eyeTop, exL, eyeY + eyeH, eyeN, 'gold', 1.7, 1);
+      lineDots(exL + eyeW, eyeTop, exL, eyeY + eyeH, eyeN, 'gold', 1.7, 1);
+      lineDots(exR - eyeW, eyeTop, exR + eyeW, eyeTop, eyeN, 'gold', 1.7, 1);
+      lineDots(exR - eyeW, eyeTop, exR, eyeY + eyeH, eyeN, 'gold', 1.7, 1);
+      lineDots(exR + eyeW, eyeTop, exR, eyeY + eyeH, eyeN, 'gold', 1.7, 1);
+
+      /* nariz */
+      var noseN = Math.max(8, Math.round(R * .05));
+      lineDots(cx - R * .065, cy + R * .05, cx + R * .065, cy + R * .05, noseN, 'gold', 1.5, .95);
+      lineDots(cx - R * .065, cy + R * .05, cx, cy + R * .19, noseN, 'gold', 1.5, .95);
+      lineDots(cx + R * .065, cy + R * .05, cx, cy + R * .19, noseN, 'gold', 1.5, .95);
+
+      /* boca sonriente */
+      var mouthN = Math.max(28, Math.round(R * .22));
+      for (var m = 0; m < mouthN; m++) {
+        var mx = cx - R * .37 + (R * .74) * (m / Math.max(1, mouthN - 1));
+        addDot(mx, mouthTop(mx), 'gold', 1.75, 1);
+        addDot(mx, mouthBottom(mx), 'gold', 1.6, .9);
+      }
+      [-R * .14, R * .02].forEach(function (tx) {
+        lineDots(cx + tx, mouthTop(cx + tx), cx + tx, mouthTop(cx + tx) + R * .085, 6, 'cream', 1.5, .95);
+      });
+
+      /* tallo */
+      var stemY0 = cy - R * .77, stemY1 = cy - R * 1.02;
+      for (var st = 0; st < 64; st++) {
+        var stt = Math.random();
+        var syy = stemY0 + (stemY1 - stemY0) * stt;
+        var shalf = R * (.072 - .022 * stt);
+        var slean = -R * .018 * stt * stt;
+        addDot(cx + slean + (Math.random() * 2 - 1) * shalf, syy, Math.random() < .5 ? 'orange' : 'gold', .6, .8);
+      }
+      lineDots(cx - R * .072, stemY0, cx - R * .068, stemY1, 12, 'gold', 1.7, 1);
+      lineDots(cx + R * .072, stemY0, cx + R * .032, stemY1, 12, 'gold', 1.7, 1);
+      lineDots(cx - R * .068, stemY1, cx + R * .032, stemY1, 6, 'gold', 1.7, 1);
+
+      /* frases que orbitan como estrellas */
+      var host = $('#galaxyWords');
+      wordEls = [];
+      if (host) {
+        host.innerHTML = '';
+        var phrases = [
+          ['te quiero', '#ffd27a'],
+          ['me gustas', '#ffb347'],
+          ['eres mi luz', '#ffe9bd'],
+          ['mi lugar favorito', '#ff9a3c'],
+          ['feliz halloween', '#ffc46b'],
+          ['contigo todo es magia', '#ffd9a0'],
+          ['te elegire otra vez', '#ffb86b']
+        ];
+        for (var w = 0; w < phrases.length; w++) {
+          var el = document.createElement('span');
+          el.className = 'gword';
+          el.textContent = phrases[w][0];
+          el.style.color = phrases[w][1];
+          el.style.opacity = '0';
+          host.appendChild(el);
+          wordEls.push({
+            el: el,
+            ang: w * .92,
+            speed: (w % 2 ? -1 : 1) * (.075 + (w % 3) * .018),
+            rx: Math.min(W * .36, R * (1.85 + (w % 3) * .30)),
+            ry: Math.min(H * .24, R * (1.35 + (w % 2) * .30)),
+            phase: w * 1.7
+          });
+        }
       }
 
       var n = W < 600 ? 500 : 950, maxR = Math.max(W, H) * .62;
@@ -467,6 +587,36 @@
       ctx.fillRect(0, 0, W, H);
     }
 
+    function halo() {
+      var g = ctx.createRadialGradient(cx, cy, R * .30, cx, cy, R * 2.05);
+      g.addColorStop(0, 'rgba(8,3,16,.96)');
+      g.addColorStop(.56, 'rgba(8,3,16,.72)');
+      g.addColorStop(1, 'rgba(8,3,16,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+
+      var g2 = ctx.createRadialGradient(cx, cy, R * .45, cx, cy, R * 1.55);
+      g2.addColorStop(0, 'rgba(255,150,60,.16)');
+      g2.addColorStop(.55, 'rgba(255,110,30,.10)');
+      g2.addColorStop(1, 'rgba(255,80,20,0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function updateWords(time) {
+      for (var i = 0; i < wordEls.length; i++) {
+        var w = wordEls[i];
+        var ang = w.ang + time * w.speed;
+        var depth = Math.sin(ang);
+        var x = cx + Math.cos(ang) * w.rx;
+        var y = cy + depth * w.ry + Math.sin(ang * 1.7 + w.phase) * R * .025;
+        var op = .26 + (depth + 1) * .37;
+        var sc = .82 + (depth + 1) * .16;
+        w.el.style.opacity = op.toFixed(3);
+        w.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) translate(-50%,-50%) scale(' + sc.toFixed(3) + ')';
+      }
+    }
+
     function draw(t) {
       if (!running) return;
       var time = (t - startedAt) / 1000;
@@ -490,6 +640,11 @@
         size = s.s * 3.2;
         ctx.drawImage(sprites[s.sprite], x - size, y - size, size * 2, size * 2);
       }
+
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      halo();
+      ctx.globalCompositeOperation = 'lighter';
 
       for (i = 0; i < pumpkin.length; i++) {
         s = pumpkin[i];
@@ -516,6 +671,7 @@
 
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
+      updateWords(time);
       if (!reduce) raf = requestAnimationFrame(draw);
     }
 

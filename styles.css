@@ -956,6 +956,36 @@ body.locked{overflow:hidden}
   display:block;
   cursor:crosshair;
 }
+.galaxy-words{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+}
+.gword{
+  position:absolute;
+  left:0;top:0;
+  white-space:nowrap;
+  font-family:var(--script);
+  font-size:clamp(.7rem,1.5vw,1rem);
+  letter-spacing:.03em;
+  line-height:1;
+  color:var(--wc,#ffe9bd);
+  text-shadow:0 0 14px rgba(255,150,60,.6), 0 0 30px rgba(255,80,40,.25);
+  will-change:transform,opacity;
+  transform-origin:50% 50%;
+}
+.gword::before,.gword::after{
+  content:"";
+  display:inline-block;
+  width:3px;height:3px;
+  border-radius:50%;
+  background:currentColor;
+  margin:0 9px;
+  vertical-align:middle;
+  box-shadow:0 0 8px currentColor;
+}
 .galaxy-ui{
   position:absolute;
   top:clamp(22px,5vh,54px);

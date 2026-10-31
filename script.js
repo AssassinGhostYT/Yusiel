@@ -270,52 +270,18 @@
     });
   }
 
-  /* ---------- modal del conjuro ---------- */
-  var modal = $('#modal');
-  var spellBtn = $('#spellBtn');
-  var modalClose = $('#modalClose');
-  var lastFocus = null;
-
-  function openModal() {
-    if (!modal) return;
-    lastFocus = document.activeElement;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('locked');
-    setTimeout(function () {
-      if (modalClose) modalClose.focus();
-    }, 80);
-  }
-
-  function closeModal() {
-    if (!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('locked');
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-
-  if (spellBtn) spellBtn.addEventListener('click', openModal);
-  if (modalClose) modalClose.addEventListener('click', closeModal);
-  if (modal) {
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) closeModal();
-    });
-  }
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && modal && modal.classList.contains('open')) closeModal();
-  });
-
-  $$('[data-answer]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      closeModal();
+  /* ---------- guardar la noche ---------- */
+  var saveBtn = $('#saveNight');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', function () {
+      var r = saveBtn.getBoundingClientRect();
+      burst(22, r.left + r.width / 2, r.top + r.height / 2);
       confetti(70);
-      burst(26, window.innerWidth / 2, window.innerHeight * 0.7);
-      toast(btn.getAttribute('data-answer') === 'magia'
-        ? 'Entonces ya soy el más afortunado de esta noche.'
-        : 'Trato hecho: primero los dulces, después el resto de la vida.');
+      toast('Guardada. Que este octubre te dure hasta el próximo.');
+      var label = $('#saveLabel');
+      if (label) label.textContent = 'Guardada para siempre';
     });
-  });
+  }
 
   /* ---------- chispas del cursor ---------- */
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduce) {

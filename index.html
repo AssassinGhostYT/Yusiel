@@ -356,17 +356,35 @@
       <svg viewBox="0 0 100 95"><use href="#heart"/></svg>
     </div>
 
-    <div class="section-head reveal" style="margin-bottom:0">
+    <div class="section-head reveal">
       <p class="kicker">capítulo cuatro</p>
-      <h2 class="sec-title">Ya no queda nada que esconder</h2>
+      <h2 class="sec-title">Y si esto fuera un cuento...</h2>
+      <p class="final-script">me gustaría que terminara contigo sonriendo</p>
     </div>
 
-    <p class="final-text reveal">Celisbeth, me gustas como la luna llena: aunque todo esté oscuro, siempre encuentro la forma de mirarte. No quiero asustarte con palabras grandes, solo invitarte a quedarte.</p>
+    <article class="last-letter reveal">
+      <div class="last-candle" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><use href="#candle-line"/></svg>
+      </div>
 
-    <button class="btn btn-primary reveal" id="spellBtn" type="button">
-      Tengo un último conjuro
-      <svg aria-hidden="true"><use href="#arrow"/></svg>
-    </button>
+      <p class="last-line" style="--i:0">Celisbeth, no vine a pedirte nada. Vine a decirte algo que se me queda atragantado desde hace tiempo: me gustas.</p>
+
+      <p class="last-line" style="--i:1">Me gustas en las noches de octubre y en las mañanas de enero; cuando ríes fuerte y cuando te quedas callada. Me gustas de esa forma tranquila que no necesita disfraz.</p>
+
+      <p class="last-line" style="--i:2">No te voy a pedir que te quedes ni que me des una respuesta. Solo quería que supieras que contigo hasta el miedo se siente como un buen plan.</p>
+
+      <p class="last-line" style="--i:3">Y que si el destino nos deja coincidir en más octubres, yo ya tengo las calabazas encendidas y una película de miedo que no vamos a ver.</p>
+
+      <p class="last-sign">Feliz Halloween, mi persona favorita.</p>
+      <p class="last-ps">P.D. El truco eras tú. El dulce también.</p>
+
+      <div class="last-action">
+        <button class="btn btn-primary" id="saveNight" type="button">
+          <span id="saveLabel">Guardar esta noche</span>
+          <svg aria-hidden="true"><use href="#heart-line"/></svg>
+        </button>
+      </div>
+    </article>
 
     <p class="final-small reveal">Sin trucos. Sin disfraces. Solo yo, queriéndote.</p>
   </section>
@@ -378,24 +396,6 @@
 <button class="audio-btn" id="audioBtn" type="button" aria-pressed="false" aria-label="Activar música de la noche">
   <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#note"/></svg>
 </button>
-
-<!-- MODAL -->
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modalTitle">
-  <div class="modal-card">
-    <button class="modal-close" id="modalClose" type="button" aria-label="Cerrar el conjuro">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#close"/></svg>
-    </button>
-    <p class="kicker">el último conjuro</p>
-    <h3 id="modalTitle">Celisbeth...</h3>
-    <p>No quiero asustarte, pero me estoy enamorando de ti. Y no pienso pedirle a ninguna bruja que me cure.</p>
-    <p>Si esta noche me dices que sí, prometo hacer de cada octubre nuestro pequeño ritual: dulces, películas de miedo que no veremos porque estaremos hablando, y una calabaza que se ría con nosotros.</p>
-    <p>El truco es que me tienes. El dulce eres tú.</p>
-    <div class="modal-actions">
-      <button class="btn btn-primary" type="button" data-answer="magia">Sí, con toda la magia</button>
-      <button class="btn btn-ghost" type="button" data-answer="dulces">Sí, empieza por los dulces</button>
-    </div>
-  </div>
-</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="script.js" defer></script>
